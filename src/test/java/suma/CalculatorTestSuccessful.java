@@ -3,6 +3,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.optional.junit.FormatterElement;
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask;
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,8 +19,26 @@ public class CalculatorTestSuccessful {
 	private static ICalculator calculator;
 
 	@BeforeClass
-	public static void initCalculator() {
+	public static void initCalculator() throws Exception {
 		calculator = new Calculator();
+		Project project = new Project();
+		JUnitTask task = new JUnitTask();
+		project.setProperty("java.io.tmpdir","src/test/java");
+		task.setProject(project);
+		JUnitTask.SummaryAttribute sa = new JUnitTask.SummaryAttribute();
+		sa.setValue("withOutAndErr");
+		task.setFork(false);
+		task.setPrintsummary(sa);
+		FormatterElement formater = new FormatterElement();         
+		FormatterElement.TypeAttribute type = new FormatterElement.TypeAttribute();
+		type.setValue("xml");
+		formater.setType(type);
+		task.addFormatter(formater);
+		JUnitTest test = new JUnitTest(CalculatorTestSuccessful.class.getName());
+		File destDir = new File("D:\\results");
+		test.setTodir(destDir);
+		task.addTest(test);         
+		task.execute();
 	}
 
 	@Before
@@ -22,10 +46,7 @@ public class CalculatorTestSuccessful {
 		System.out.println("This is executed before each Test");
 	}
 
-	@After
-	public void afterEachTest() {
-		System.out.println("This is exceuted after each Test");
-	}
+	
 
 	@Test
 	public void testSum() {
