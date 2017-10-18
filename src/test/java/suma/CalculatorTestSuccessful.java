@@ -10,6 +10,7 @@ import org.apache.tools.ant.taskdefs.optional.junit.FormatterElement;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTask;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -21,29 +22,13 @@ public class CalculatorTestSuccessful {
 	@BeforeClass
 	public static void initCalculator() throws Exception {
 		calculator = new Calculator();
-		Project project = new Project();
-		JUnitTask task = new JUnitTask();
-		project.setProperty("java.io.tmpdir","src/test/java");
-		task.setProject(project);
-		JUnitTask.SummaryAttribute sa = new JUnitTask.SummaryAttribute();
-		sa.setValue("withOutAndErr");
-		task.setFork(false);
-		task.setPrintsummary(sa);
-		FormatterElement formater = new FormatterElement();         
-		FormatterElement.TypeAttribute type = new FormatterElement.TypeAttribute();
-		type.setValue("xml");
-		formater.setType(type);
-		task.addFormatter(formater);
-		JUnitTest test = new JUnitTest(CalculatorTestSuccessful.class.getName());
-		File destDir = new File("D:\\results");
-		test.setTodir(destDir);
-		task.addTest(test);         
-		task.execute();
+		
 	}
 
-	@Before
-	public void beforeEachTest() {
-		System.out.println("This is executed before each Test");
+	@After
+	public void PrintResult() throws Exception {
+		Reporte reporte = new Reporte();
+		reporte.PintarReporte();
 	}
 
 	
